@@ -4,7 +4,7 @@ import db from "@/lib"; // models 폴더 위치에 맞게 경로 조정
 
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const params = await context.params; // await로 풀기
   const performanceId = params.id;

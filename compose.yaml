@@ -1,0 +1,68 @@
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: pa
+      MYSQL_USER: pa
+      MYSQL_PASSWORD: ${DB_PASSWORD:-1234}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in the root .env file}
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=$$MYSQL_PASSWORD mysql -h 127.0.0.1 -u$$MYSQL_USER $$MYSQL_DATABASE -e 'SELECT 1 FROM performances LIMIT 1'"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+  migrate:
+    build:
+      context: ./openapi
+    restart: "no"
+    command: ["python", "migrate.py"]
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: pa
+      DB_USER: pa
+      DB_PASSWORD: ${DB_PASSWORD:-1234}
+    depends_on:
+      db:
+        condition: service_healthy
+  collector:
+    build:
+      context: ./openapi
+    restart: "no"
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: pa
+      DB_USER: pa
+      DB_PASSWORD: ${DB_PASSWORD:-1234}
+      KOPIS_SERVICE_KEY: ${KOPIS_SERVICE_KEY:-}
+      KOPIS_START_DATE: ${KOPIS_START_DATE:-}
+      KOPIS_END_DATE: ${KOPIS_END_DATE:-}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+  app:
+    build:
+      context: ./code
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: pa
+      DB_USER: pa
+      DB_PASSWORD: ${DB_PASSWORD:-1234}
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  mysql_data:

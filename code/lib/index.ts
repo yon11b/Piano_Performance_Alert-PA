@@ -1,23 +1,19 @@
 // app/lib/models/index.ts
-import { Sequelize, DataTypes } from "sequelize";
-import configJson from "../config/config.json";
+import { Sequelize } from "sequelize";
 import mysql2 from "mysql2";
 import PerformanceModel from "./performance";
 
-const env = process.env.NODE_ENV || "development";
-const config = configJson[env];
-
 const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  { host: config.host, dialect: "mysql", dialectModule: mysql2 }
+  process.env.DB_NAME ?? "pa",
+  process.env.DB_USER ?? "pa",
+  process.env.DB_PASSWORD ?? "1234",
+  {
+    host: process.env.DB_HOST ?? "127.0.0.1",
+    port: Number(process.env.DB_PORT ?? 3306),
+    dialect: "mysql",
+    dialectModule: mysql2,
+  }
 );
-
-sequelize
-  .authenticate()
-  .then(() => console.log("DB connection established."))
-  .catch((err) => console.error("Unable to connect to DB:", err));
 
 const db: { [key: string]: any } = {};
 

@@ -10,7 +10,7 @@ from db import connect_DB
 baseurl = 'http://www.kopis.or.kr/openApi/restful'
 servicekey = 'c1952d9239ff4e6e8f2e365bb8ee7690'
 
-con = connect_DB()
+con = None
 
 # -------------------------------
 # 1️⃣ 공연 목록 가져와서 DB insert (장르 필터: 서양음악(클래식)만)
@@ -34,7 +34,7 @@ def insert_new_performances(servicekey):
 
             xml = ET.fromstring(response.text)
             newcnt = push_performance_list(con, xml)
-            if newcnt == 0:
+            if len(xml) == 0:
                 break
             totalcnt += newcnt
         except Exception as e:
@@ -141,5 +141,10 @@ def push_performance_detail(con, xml, performance_id):
 # -------------------------------
 # 실행 순서
 # -------------------------------
-insert_new_performances(servicekey)
-update_performance_details(servicekey)
+if __name__ == "__main__":
+    con = connect_DB()
+    try:
+        insert_new_performances(servicekey)
+        update_performance_details(servicekey)
+    finally:
+        con.close()

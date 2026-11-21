@@ -5,6 +5,9 @@ export default class Performance extends Model {
   static initModel(sequelize: Sequelize) {
     Performance.init(
       {
+        famous_level: { type: DataTypes.STRING(16), allowNull: true },
+        program: { type: DataTypes.TEXT("long"), allowNull: true },
+        composer: { type: DataTypes.TEXT, allowNull: true },
         id: {
           type: DataTypes.STRING,
           primaryKey: true,
@@ -35,7 +38,7 @@ export default class Performance extends Model {
         make: { type: DataTypes.STRING, comment: "제작진" },
         price: { type: DataTypes.STRING, comment: "가격" },
         poster: { type: DataTypes.STRING, comment: "포스터 이미지 저장 경로" },
-        story: { type: DataTypes.STRING, comment: "줄거리" },
+        story: { type: DataTypes.TEXT("long"), comment: "줄거리" },
         genre: { type: DataTypes.STRING, comment: "장르" },
         state: { type: DataTypes.STRING, comment: "공연 예매 상태" },
         openrun: { type: DataTypes.STRING, comment: "오픈런 여부" },
@@ -47,7 +50,7 @@ export default class Performance extends Model {
         updated_time: {
           type: DataTypes.DATE,
           comment: "수정된 시간",
-          onUpdate: Sequelize.literal("CURRENT_TIMESTAMP"),
+          onUpdate: "CURRENT_TIMESTAMP",
         },
         time: { type: DataTypes.STRING, comment: "공연 요일별 시간" },
         date_start: { type: DataTypes.STRING, comment: "공연 시작 날짜" },

@@ -1,0 +1,21 @@
+export const FAMOUS_LEVELS = ["WORLD", "NATIONAL", "RISING", "NEWBEE"] as const;
+export type FamousLevel = (typeof FAMOUS_LEVELS)[number];
+export type PerformanceType = {
+  id: string;
+  title: string;
+  genre: string | null;
+  location: string | null;
+  date_start: string | null;
+  date_finish: string | null;
+  time: string | null;
+  price: string | null;
+  cast: string | null;
+  poster: string | null;
+  story: string | null;
+  runtime: string | null;
+  age: string | null;
+  state: string | null;
+  famous_level: FamousLevel | null;
+  program: string | null;
+  composer: string | null;
+};

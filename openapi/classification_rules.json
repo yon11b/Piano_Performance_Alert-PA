@@ -1,0 +1,10 @@
+{
+  "source": "https://app.notion.com/p/2d6b3aca18a48049a3fee1b1a200215a",
+  "world_min_price": 200000,
+  "artists": {
+    "WORLD": ["조성진", "임동민", "임동혁", "손열음", "임윤찬", "일리야 라쉬콥스키", "백건우", "유자왕", "유자 왕", "다니엘 바렌보임"],
+    "NATIONAL": [],
+    "RISING": [],
+    "NEWBEE": []
+  }
+}
